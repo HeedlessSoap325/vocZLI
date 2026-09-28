@@ -1,49 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
-import Voci from '../models/voci';
 import VociItem from '../components/VociItem';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
-
-const vociList: Voci[] = [
-	{
-		term: "Schwein",
-		translation: "Pig"
-	},
-	{
-		term: "Hund",
-		translation: "Dog"
-	},
-	{
-		term: "Katze",
-		translation: "Cat"
-	},
-	{
-		term: "Ente",
-		translation: "Duck"
-	},
-	{
-		term: "Löwe",
-		translation: "Lion"
-	},
-	{
-		term: "Schlange",
-		translation: "Snake"
-	},
-	{
-		term: "Kuh",
-		translation: "Cow"
-	},
-	{
-		term: "Pferd",
-		translation: "Horse"
-	}
-]
+import { useVoci } from '../context/VociContext';
 
 export default function Home() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
+
+	const { vociList } = useVoci();
 
 	return (
 		<View style={styles.container}>

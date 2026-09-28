@@ -1,42 +1,7 @@
-import { Animated, Button, Pressable, StyleSheet, Text, useAnimatedValue, View } from "react-native";
-import Voci from "../models/voci";
+import { Animated, Pressable, StyleSheet, Text, useAnimatedValue, View } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-
-const vociList: Voci[] = [
-	{
-		term: "Schwein",
-		translation: "Pig"
-	},
-	{
-		term: "Hund",
-		translation: "Dog"
-	},
-	{
-		term: "Katze",
-		translation: "Cat"
-	},
-	{
-		term: "Ente",
-		translation: "Duck"
-	},
-	{
-		term: "Löwe",
-		translation: "Lion"
-	},
-	{
-		term: "Schlange",
-		translation: "Snake"
-	},
-	{
-		term: "Kuh",
-		translation: "Cow"
-	},
-	{
-		term: "Pferd",
-		translation: "Horse"
-	}
-]
+import { useVoci } from "../context/VociContext";
 
 export default function LearnScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -47,9 +12,10 @@ export default function LearnScreen() {
 	const fadeAnim = useAnimatedValue(1);
 	const slideAnim = useAnimatedValue(0);
 
-	const currentVoci = vociList[currentIndex];
-
 	const router = useRouter();
+	const { vociList } = useVoci();
+
+	const currentVoci = vociList[currentIndex];
 
 	function handleNext() {
 		setShowTranslation(false);
