@@ -50,7 +50,10 @@ export default function Home() {
 		keyExtractor={(_, index) => `voci-${index}`} 
 		style={styles.flatList}
 		contentContainerStyle={styles.flatListContainer}
-		/>
+		ListEmptyComponent={
+			<Text>Keine Vocis vorhanden ;-)</Text>
+		}
+	/>
 
 		<StatusBar style="auto" />
 	</View>
