@@ -1,6 +1,7 @@
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import Voci from "../models/voci";
-import { useState } from "react";
+import { useReducer, useState } from "react";
+import { useRouter } from "expo-router";
 
 const vociList: Voci[] = [
 	{
@@ -42,6 +43,18 @@ export default function LearnScreen() {
 	const [showTranslation, setShowTranslation] = useState<boolean>(false);
 	const currentVoci = vociList[currentIndex];
 
+	const router = useRouter();
+
+	function handleNext() {
+		setShowTranslation(false);
+
+		if (currentIndex + 1 >= vociList.length) {
+			router.navigate("/");
+		} else {
+			setCurrentIndex(currentIndex + 1);
+		}
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.progress}>{currentIndex + 1} / {vociList.length}</Text>
@@ -52,12 +65,16 @@ export default function LearnScreen() {
 				</Text>
 			</View>
 
-			<View style={styles.showTranslationView}>
+			<View style={styles.buttonsView}>
 				<Pressable style={styles.showTranslationButton} onPress={() => setShowTranslation(!showTranslation)}>
 					<Text style={styles.showTranslationText}>
 						{!showTranslation && "Übersetzung zeigen"}
 						{showTranslation && "Original zeigen"}
 						</Text>
+				</Pressable>
+
+				<Pressable style={styles.nextButton} onPress={handleNext}>
+					<Text style={styles.nextText}>Weiter</Text>
 				</Pressable>
 			</View>
 		</View>
@@ -97,9 +114,11 @@ const styles = StyleSheet.create({
 		fontWeight: "500",
 	},
 
-	showTranslationView: {
+	buttonsView: {
 		marginTop: "5%",
-		flex: 1,
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
 		minWidth: 300,
 		maxWidth: 300,
 	},
@@ -107,11 +126,21 @@ const styles = StyleSheet.create({
 	showTranslationButton: {
 		padding: 20,
 		borderRadius: 16,
-		alignSelf: "flex-start",
 		backgroundColor: "#ed7703",
 	},
 
 	showTranslationText: {
 		fontWeight: "600",
-	}
+	},
+
+	nextButton: {
+		padding: 20,
+		borderRadius: 16,
+		backgroundColor: "#005380",
+	},
+
+	nextText: {
+		fontWeight: "600",
+		color: "white"
+	},
 })
