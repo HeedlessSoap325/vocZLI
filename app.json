@@ -22,7 +22,15 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      ["expo-router"],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow vocZLI to access your photos",
+          "cameraPermission": "Allow vocZLI to access your camera",
+          "microphonePermision": false
+        }
+      ]
     ]
   }
 }
