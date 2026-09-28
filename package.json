@@ -14,7 +14,9 @@
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
+    "android:dev": "expo start --android",
+    "android:run": "expo run:android",
+    "android:install": "expo run:android --variant release",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
