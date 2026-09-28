@@ -12,16 +12,8 @@ interface VociContextType {
 const VociContext = createContext<VociContextType | undefined>(undefined);
 
 export function VociProvider({ children }: { children: ReactNode }) {
-  	const [vociList, setVociList] = useState<Voci[]>([
-		{ term: "Schwein", translation: "Pig" },
-		{ term: "Hund", translation: "Dog" },
-		{ term: "Katze", translation: "Cat" },
-		{ term: "Ente", translation: "Duck" },
-		{ term: "Löwe", translation: "Lion" },
-		{ term: "Schlange", translation: "Snake" },
-		{ term: "Kuh", translation: "Cow" },
-		{ term: "Pferd", translation: "Horse" }
-	]);
+  	const [vociList, setVociList] = useState<Voci[]>([]);
+	const [loaded, setloaded] = useState<boolean>(false);
 
 	function addVoci(voci: Voci) {
 		setVociList([...vociList, voci]);
@@ -46,6 +38,8 @@ export function VociProvider({ children }: { children: ReactNode }) {
 	}
 
 	useEffect(() => {
+		if (!loaded) return;
+
 		async function save() {
 			try {
 				const storable = JSON.stringify(vociList);
@@ -59,6 +53,23 @@ export function VociProvider({ children }: { children: ReactNode }) {
 
 		save();
 	}, [vociList]);
+
+	useEffect(() => {
+		async function load() {
+			try {
+				const stored = await AsyncStorage.getItem("voci");
+				const setable = JSON.parse(stored ?? "[]");
+				setVociList(setable);
+				setloaded(true);
+			} catch(e) {
+				console.error(`Failed to load vocis: ${e}`);
+			} finally {
+				console.log("Vocis geladen");
+			}
+		}
+
+		load();
+	}, [])
 
 	return (
 		<VociContext.Provider value={{ vociList, addVoci, updateVoci, removeVoci }}>
