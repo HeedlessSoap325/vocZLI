@@ -1,6 +1,6 @@
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Button, Pressable, StyleSheet, Text, useAnimatedValue, View } from "react-native";
 import Voci from "../models/voci";
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
 
 const vociList: Voci[] = [
@@ -44,6 +44,9 @@ export default function LearnScreen() {
 	const [correctCount, setCorrectCount] = useState<number>(0);
 	const [incorrectCount, setIncorrectCount] = useState<number>(0);
 
+	const fadeAnim = useAnimatedValue(1);
+	const slideAnim = useAnimatedValue(0);
+
 	const currentVoci = vociList[currentIndex];
 
 	const router = useRouter();
@@ -58,44 +61,86 @@ export default function LearnScreen() {
 		}
 	}
 
+	const handleSwitchCard = () => {
+		Animated.timing(slideAnim, {
+			toValue: -300,
+			duration: 200,
+			useNativeDriver: true,
+		}).start(() => {
+			handleNext();
+
+			slideAnim.setValue(300);
+
+			Animated.timing(slideAnim, {
+				toValue: 0,
+				duration: 200,
+				useNativeDriver: true,
+			}).start();
+		});
+	}
+
+	const handleShowOtherSide = () => {
+		Animated.timing(fadeAnim, {
+			toValue: 0,
+			duration: 150,
+			useNativeDriver: true,
+		}).start(() => {
+			setShowTranslation(prev => !prev);
+	
+			Animated.timing(fadeAnim, {
+				toValue: 1,
+				duration: 150,
+				useNativeDriver: true,
+			}).start();
+		});
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.progress}>{currentIndex + 1} / {vociList.length}</Text>
 
 			<Text style={styles.rightWrong}>Richtig: {correctCount} | Falsch: {incorrectCount}</Text>
 
-			<View style={styles.vociCard}>
+			<Animated.View style={[
+				styles.vociCard,
+				{
+					opacity: fadeAnim,
+					transform: [
+						{ translateX: slideAnim }
+					],
+				}
+			]}>
 				<Text style={styles.vociText}>
 					{!showTranslation && currentVoci.term}
 					{showTranslation && currentVoci.translation}
 				</Text>
-			</View>
+			</Animated.View>
 
 			<View style={styles.rightWrongView}>
 				<Pressable style={styles.wrongButton} onPress={() => {
 					setIncorrectCount(incorrectCount + 1); 
-					handleNext(); 
+					handleSwitchCard(); 
 				}}>
 					<Text style={styles.wrongText}>Falsch</Text>
 				</Pressable>
 
 				<Pressable style={styles.rightButton} onPress={() => { 
 					setCorrectCount(correctCount + 1); 
-					handleNext(); 
+					handleSwitchCard(); 
 				}}>
 					<Text style={styles.rightText}>Richtig</Text>
 				</Pressable>				
 			</View>
 
 			<View style={styles.buttonsView}>
-				<Pressable style={styles.showTranslationButton} onPress={() => setShowTranslation(!showTranslation)}>
+				<Pressable style={styles.showTranslationButton} onPress={handleShowOtherSide}>
 					<Text style={styles.showTranslationText}>
 						{!showTranslation && "Übersetzung zeigen"}
 						{showTranslation && "Original zeigen"}
 						</Text>
 				</Pressable>
 
-				<Pressable style={styles.nextButton} onPress={handleNext}>
+				<Pressable style={styles.nextButton} onPress={handleSwitchCard}>
 					<Text style={styles.nextText}>Weiter</Text>
 				</Pressable>
 			</View>
