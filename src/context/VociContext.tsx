@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface VociContextType {
 	vociList: Voci[];
+	loaded: boolean;
 	addVoci: (voci: Voci) => void;
 	updateVoci: (term: string, updatedVoci: Voci) => void;
 	removeVoci: (term: string) => void;
@@ -60,6 +61,7 @@ export function VociProvider({ children }: { children: ReactNode }) {
 				const stored = await AsyncStorage.getItem("voci");
 				const setable = JSON.parse(stored ?? "[]");
 				setVociList(setable);
+
 				setloaded(true);
 			} catch(e) {
 				console.error(`Failed to load vocis: ${e}`);
@@ -72,7 +74,7 @@ export function VociProvider({ children }: { children: ReactNode }) {
 	}, [])
 
 	return (
-		<VociContext.Provider value={{ vociList, addVoci, updateVoci, removeVoci }}>
+		<VociContext.Provider value={{ vociList, loaded, addVoci, updateVoci, removeVoci }}>
 			{children}
 		</VociContext.Provider>
 	);

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, ActivityIndicator } from 'react-native';
 import VociItem from '../components/VociItem';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,23 +10,27 @@ export default function Home() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 
-	const { vociList } = useVoci();
+	const { vociList, loaded } = useVoci();
 
 	return (
 		<View style={styles.container}>
 		<Text style={styles.title}>VocZLI</Text>
 		<Text>Meine Vokabel-Lern-App</Text>
 
-		<FlatList 
-			data={vociList} 
-			renderItem={({item}) => <VociItem voci={item}/>} 
-			keyExtractor={(_, index) => `voci-${index}`} 
-			style={styles.flatList}
-			contentContainerStyle={styles.flatListContainer}
-			ListEmptyComponent={
-				<Text>Keine Vocis vorhanden ;-)</Text>
-			}
-		/>
+		{!loaded && <ActivityIndicator size="large" />}
+
+		{ loaded && 
+			<FlatList 
+				data={vociList} 
+				renderItem={({item}) => <VociItem voci={item}/>} 
+				keyExtractor={(_, index) => `voci-${index}`} 
+				style={styles.flatList}
+				contentContainerStyle={styles.flatListContainer}
+				ListEmptyComponent={
+					<Text>Keine Vocis vorhanden ;-)</Text>
+				}
+			/>
+		}
 
 			<Pressable 
 				style={({pressed}) => [
