@@ -41,6 +41,9 @@ const vociList: Voci[] = [
 export default function LearnScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [showTranslation, setShowTranslation] = useState<boolean>(false);
+	const [correctCount, setCorrectCount] = useState<number>(0);
+	const [incorrectCount, setIncorrectCount] = useState<number>(0);
+
 	const currentVoci = vociList[currentIndex];
 
 	const router = useRouter();
@@ -58,11 +61,30 @@ export default function LearnScreen() {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.progress}>{currentIndex + 1} / {vociList.length}</Text>
+
+			<Text style={styles.rightWrong}>Richtig: {correctCount} | Falsch: {incorrectCount}</Text>
+
 			<View style={styles.vociCard}>
 				<Text style={styles.vociText}>
 					{!showTranslation && currentVoci.term}
 					{showTranslation && currentVoci.translation}
 				</Text>
+			</View>
+
+			<View style={styles.rightWrongView}>
+				<Pressable style={styles.wrongButton} onPress={() => {
+					setIncorrectCount(incorrectCount + 1); 
+					handleNext(); 
+				}}>
+					<Text style={styles.wrongText}>Falsch</Text>
+				</Pressable>
+
+				<Pressable style={styles.rightButton} onPress={() => { 
+					setCorrectCount(correctCount + 1); 
+					handleNext(); 
+				}}>
+					<Text style={styles.rightText}>Richtig</Text>
+				</Pressable>				
 			</View>
 
 			<View style={styles.buttonsView}>
@@ -114,8 +136,16 @@ const styles = StyleSheet.create({
 		fontWeight: "500",
 	},
 
+	rightWrong: {
+		position: "absolute",
+		top: 20,
+		right: 20,
+		fontSize: 20,
+		fontWeight: "500",
+	},
+
 	buttonsView: {
-		marginTop: "5%",
+		marginTop: "10%",
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -142,5 +172,35 @@ const styles = StyleSheet.create({
 	nextText: {
 		fontWeight: "600",
 		color: "white"
+	},
+
+	rightWrongView: {
+		marginTop: "5%",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		minWidth: 300,
+		maxWidth: 300,
+	},
+
+	rightButton: {
+		padding: 20,
+		borderRadius: 16,
+		backgroundColor: "green",
+	},
+
+	rightText: {
+		fontWeight: "600",
+		color: "white"
+	},
+
+	wrongButton: {
+		padding: 20,
+		borderRadius: 16,
+		backgroundColor: "red",
+	},
+
+	wrongText: {
+		fontWeight: "600"
 	},
 })
