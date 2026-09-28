@@ -49,6 +49,7 @@ export default function Home() {
 		renderItem={({item}) => <VociItem voci={item}/>} 
 		keyExtractor={(_, index) => `voci-${index}`} 
 		style={styles.flatList}
+		contentContainerStyle={styles.flatListContainer}
 		/>
 
 		<StatusBar style="auto" />
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
 	backgroundColor: '#fff',
 	alignItems: 'center',
 	justifyContent: 'center',
+	paddingTop: "30%",
   },
 
   title: {
@@ -71,5 +73,10 @@ const styles = StyleSheet.create({
 
   flatList: {
 	flexGrow: 0,
+	width: "100%",
+  },
+
+  flatListContainer: {
+	alignItems: "center",
   }
 });
