@@ -6,7 +6,7 @@ interface VociDetailProps {
 	onSave: (voci: Voci) => void;
 }
 
-export default function VociDetail({props}: {props: VociDetailProps}) {
+export default function VociDetail(props: VociDetailProps) {
 	const [term, setTerm] = useState<string>("");
 	const [translation, setTranslation] = useState<string>("");
 
