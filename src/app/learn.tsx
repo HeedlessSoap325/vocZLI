@@ -11,7 +11,7 @@ export default function LearnScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignContent: "center",
+		alignItems: "center",
 		justifyContent: "center",
 	},
 
