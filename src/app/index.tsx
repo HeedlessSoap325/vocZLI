@@ -4,6 +4,7 @@ import Voci from '../models/voci';
 import VociItem from '../components/VociItem';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from '@expo/vector-icons';
 
 const vociList: Voci[] = [
 	{
@@ -61,14 +62,16 @@ export default function Home() {
 		/>
 
 			<Pressable 
-				style={[
+				style={({pressed}) => [
 					styles.fab,
 					{
-						bottom: styles.fab.bottom + insets.bottom
+						bottom: styles.fab.bottom + insets.bottom,
+						transform: pressed ? "scale(0.95)" : "scale(1)",
+						opacity: pressed ? 0.5 : 1,
 					}
 				]}
 				onPress={() => router.push("/learn")}>
-				<Text>Start</Text>
+				<Ionicons name="play" size={24} color="#fff"/>
 			</Pressable>
 
 			<StatusBar style="auto" />
@@ -109,5 +112,9 @@ const styles = StyleSheet.create({
 	flex: 1,
 	alignItems: "center",
 	justifyContent: "center",
+	borderRadius: "50%",
+	elevation: 5,
+	shadowOpacity: 5,
+	shadowRadius: 30,
   }
 });
