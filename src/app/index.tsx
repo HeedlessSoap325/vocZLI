@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import Voci from '../models/voci';
+import VociItem from '../components/VociItem';
 
 const vociList: Voci[] = [
 	{
@@ -42,7 +43,15 @@ export default function Home() {
 	<View style={styles.container}>
 	  <Text style={styles.title}>VocZLI</Text>
 	  <Text>Meine Vokabel-Lern-App</Text>
-	  <StatusBar style="auto" />
+
+	  <FlatList 
+	  	data={vociList} 
+		renderItem={({item}) => <VociItem voci={item}/>} 
+		keyExtractor={(_, index) => `voci-${index}`} 
+		style={styles.flatList}
+		/>
+
+		<StatusBar style="auto" />
 	</View>
   );
 }
@@ -57,6 +66,10 @@ const styles = StyleSheet.create({
 
   title: {
 	fontSize: 40,
-	fontWeight: 600,
+	fontWeight: "600",
   },
+
+  flatList: {
+	flexGrow: 0,
+  }
 });
