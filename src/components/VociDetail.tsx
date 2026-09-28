@@ -3,12 +3,15 @@ import Voci from "../models/voci";
 import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface VociDetailProps {
-	onSave: (voci: Voci) => void;
+	onSave?: (voci: Voci) => void;
+	voci?: Voci;
+	onDelete?: (term: string) => void;
+	onCancle?: () => void;
 }
 
 export default function VociDetail(props: VociDetailProps) {
-	const [term, setTerm] = useState<string>("");
-	const [translation, setTranslation] = useState<string>("");
+	const [term, setTerm] = useState<string>( props.voci ? props.voci.term : "");
+	const [translation, setTranslation] = useState<string>(props.voci ? props.voci.translation : "");
 
 	function onSubmit() {
 		if (term.trim() === "" || translation.trim() === "") {
@@ -19,12 +22,20 @@ export default function VociDetail(props: VociDetailProps) {
 				translation: translation,
 			};
 
-			props.onSave(voci);
+			props.onSave!(voci);
 		}
 
 		setTerm("");
 		setTranslation("");
 	};
+
+	function handleCancle() {
+		props.onCancle!();
+	}
+
+	function handleDelete() {
+		props.onDelete!(term);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -45,9 +56,23 @@ export default function VociDetail(props: VociDetailProps) {
 					placeholder="z.B. Apple"
 				/>
 
-				<Pressable style={styles.saveButton} onPress={onSubmit}>
-					<Text style={styles.saveButtonText}>Speichern</Text>
-				</Pressable>
+				{ (props.voci && props.onDelete) &&
+					<Pressable style={styles.saveButton} onPress={handleDelete}>
+						<Text style={styles.saveButtonText}>Löschen</Text>
+					</Pressable>
+				}
+				
+				{ (props.voci && props.onCancle) &&
+					<Pressable style={styles.saveButton} onPress={handleCancle}>
+						<Text style={styles.saveButtonText}>Abbrechen</Text>
+					</Pressable>
+				}
+
+				{ props.onSave &&
+					<Pressable style={styles.saveButton} onPress={onSubmit}>
+						<Text style={styles.saveButtonText}>Speichern</Text>
+					</Pressable>
+				}
 			</View>
 		</View>
 	);
