@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Voci from "../models/voci";
-import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, AlertButton, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface VociDetailProps {
 	onSave?: (voci: Voci) => void;
@@ -23,10 +23,10 @@ export default function VociDetail(props: VociDetailProps) {
 			};
 
 			props.onSave!(voci);
-		}
 
-		setTerm("");
-		setTranslation("");
+			setTerm("");
+			setTranslation("");
+		}		
 	};
 
 	function handleCancle() {
@@ -34,7 +34,19 @@ export default function VociDetail(props: VociDetailProps) {
 	}
 
 	function handleDelete() {
-		props.onDelete!(term);
+		const cancelButton: AlertButton = {
+			text: "Abbrechen",
+			style: "cancel",
+			isPreferred: true
+		}
+
+		const deleteButton: AlertButton = {
+			text: "Löschen",
+			onPress: () => props.onDelete!(term),
+			style: "destructive"
+		}
+
+		Alert.alert("Löschen", "Sind Sie sich sicher, dass sie dieses Voci löschen wollen?", [cancelButton, deleteButton])
 	}
 
 	return (
@@ -56,21 +68,21 @@ export default function VociDetail(props: VociDetailProps) {
 					placeholder="z.B. Apple"
 				/>
 
-				{ (props.voci && props.onDelete) &&
-					<Pressable style={styles.saveButton} onPress={handleDelete}>
-						<Text style={styles.saveButtonText}>Löschen</Text>
-					</Pressable>
-				}
-				
-				{ (props.voci && props.onCancle) &&
-					<Pressable style={styles.saveButton} onPress={handleCancle}>
-						<Text style={styles.saveButtonText}>Abbrechen</Text>
-					</Pressable>
-				}
-
 				{ props.onSave &&
 					<Pressable style={styles.saveButton} onPress={onSubmit}>
 						<Text style={styles.saveButtonText}>Speichern</Text>
+					</Pressable>
+				}
+
+				{ (props.voci && props.onCancle) &&
+					<Pressable style={styles.cancelButton} onPress={handleCancle}>
+						<Text style={styles.cancelButtonText}>Abbrechen</Text>
+					</Pressable>
+				}
+
+				{ (props.voci && props.onDelete) &&
+					<Pressable style={styles.deleteButton} onPress={handleDelete}>
+						<Text style={styles.deleteButtonText}>Löschen</Text>
 					</Pressable>
 				}
 			</View>
@@ -113,5 +125,31 @@ const styles = StyleSheet.create({
 	saveButtonText: {
 		fontSize: 16,
 		fontWeight: "600"
-	}
+	},
+
+	cancelButton: {
+		padding: 20,
+		backgroundColor: "gray",
+		borderRadius: 16,
+		alignSelf: "flex-end",
+		marginTop: 30,
+	},
+
+	cancelButtonText: {
+		fontSize: 16,
+		fontWeight: "600"
+	},
+
+	deleteButton: {
+		padding: 20,
+		backgroundColor: "red",
+		borderRadius: 16,
+		alignSelf: "flex-end",
+		marginTop: 30,
+	},
+
+	deleteButtonText: {
+		fontSize: 16,
+		fontWeight: "600"
+	},
 });
