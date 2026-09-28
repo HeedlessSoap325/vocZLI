@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
 	shadowColor: "gray",
 	shadowOpacity: 20, 
 	shadowRadius: 10,
-	minWidth: "50%"
+	minWidth: "94%"
   },
 });

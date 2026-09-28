@@ -14,23 +14,21 @@ export default function Home() {
 
 	return (
 		<View style={styles.container}>
-		<Text style={styles.title}>VocZLI</Text>
-		<Text>Meine Vokabel-Lern-App</Text>
 
-		{!loaded && <ActivityIndicator size="large" />}
+			{!loaded && <ActivityIndicator size="large" />}
 
-		{ loaded && 
-			<FlatList 
-				data={vociList} 
-				renderItem={({item}) => <VociItem voci={item}/>} 
-				keyExtractor={(_, index) => `voci-${index}`} 
-				style={styles.flatList}
-				contentContainerStyle={styles.flatListContainer}
-				ListEmptyComponent={
-					<Text>Keine Vocis vorhanden ;-)</Text>
-				}
-			/>
-		}
+			{ loaded && 
+				<FlatList 
+					data={vociList} 
+					renderItem={({item}) => <VociItem voci={item}/>} 
+					keyExtractor={(_, index) => `voci-${index}`} 
+					style={styles.flatList}
+					contentContainerStyle={styles.flatListContainer}
+					ListEmptyComponent={
+						<Text>Keine Vocis vorhanden ;-)</Text>
+					}
+				/>
+			}
 
 			<Pressable 
 				style={({pressed}) => [
@@ -55,8 +53,7 @@ const styles = StyleSheet.create({
 	flex: 1,
 	backgroundColor: '#fff',
 	alignItems: 'center',
-	justifyContent: 'center',
-	paddingTop: "30%",
+	paddingTop: "5%",
   },
 
   title: {
