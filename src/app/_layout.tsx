@@ -1,10 +1,16 @@
 import { Stack, useRouter } from 'expo-router';
 import { VociProvider } from '../context/VociContext';
-import { Pressable } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useEffect, useState } from 'react';
+import { onAuthenticate } from '../utils/authService';
+import Login from './login';
 export default function RootLayout() {
 	const router = useRouter();
+
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+	if (!isLoggedIn) return <Login setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/>
 
 	return (
 		<VociProvider>

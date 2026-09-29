@@ -16,13 +16,16 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "dev.heedlessSoap.vocZLI"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-router"],
+      [
+        "expo-router"
+      ],
       [
         "expo-image-picker",
         {
@@ -30,6 +33,10 @@
           "cameraPermission": "Allow vocZLI to access your camera",
           "microphonePermision": false
         }
+      ],
+      [
+        "expo-local-authentication",
+        { "faceIDPermission": "Allow vocZLI to use Face ID." }
       ]
     ]
   }

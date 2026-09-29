@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList, Pressable, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, ActivityIndicator, Platform } from 'react-native';
 import VociItem from '../components/VociItem';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,18 +35,20 @@ export default function Home() {
 				/>
 			}
 
-			<Pressable 
-				style={({pressed}) => [
-					styles.fabDebug,
-					{
-						bottom: insets.bottom + styles.fabLearn.bottom + styles.fabLearn.height + styles.fabDebug.bottom,
-						transform: pressed ? "scale(0.95)" : "scale(1)",
-						opacity: pressed ? 0.5 : 1,
-					}
-				]}
-				onPress={() => router.push("/sensorDebug")}>
-				<Ionicons name="bug" size={24} color="#fff"/>
-			</Pressable>
+			{__DEV__ && 
+				<Pressable 
+					style={({pressed}) => [
+						styles.fabDebug,
+						{
+							bottom: insets.bottom + styles.fabLearn.bottom + styles.fabLearn.height + styles.fabDebug.bottom,
+							transform: pressed ? "scale(0.95)" : "scale(1)",
+							opacity: pressed ? 0.5 : 1,
+						}
+					]}
+					onPress={() => router.push("/sensorDebug")}>
+					<Ionicons name="bug" size={24} color="#fff"/>
+				</Pressable>
+			}
 
 			<Pressable 
 				style={({pressed}) => [
