@@ -17,19 +17,24 @@ export function VociProvider({ children }: { children: ReactNode }) {
   	const [vociList, setVociList] = useState<Voci[]>([]);
 	const [loaded, setloaded] = useState<boolean>(false);
 
-	function addVoci(voci: Voci) {
+	async function addVoci(voci: Voci) {
 		if (voci.imageUri) {
-			const persistedUri = copyImageToAppDirectory(voci.imageUri);
+			const persistedUri = await copyImageToAppDirectory(voci.imageUri);
 			voci.imageUri = persistedUri;
 		}
 
 		setVociList([...vociList, voci]);
 	}
 
-	function updateVoci(term: string, updatedVoci: Voci) {
+	async function updateVoci(term: string, updatedVoci: Voci) {
 		const oldVoci = vociList.find((v) => v.term === term);
 		if (oldVoci && oldVoci.imageUri) { // there is already an image present
 			deleteImageFromAppDirectory(oldVoci.imageUri);
+		}
+
+		if (updatedVoci.imageUri) {
+			const persistedUri = await copyImageToAppDirectory(updatedVoci.imageUri);
+			updatedVoci.imageUri = persistedUri;
 		}
 		
 		setVociList(
