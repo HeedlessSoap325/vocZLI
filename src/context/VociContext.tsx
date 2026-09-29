@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import Voci from '../models/voci';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { copyImageToAppDirectory, deleteImageFromAppDirectory } from '../utils/image';
 
 interface VociContextType {
 	vociList: Voci[];
@@ -17,10 +18,20 @@ export function VociProvider({ children }: { children: ReactNode }) {
 	const [loaded, setloaded] = useState<boolean>(false);
 
 	function addVoci(voci: Voci) {
+		if (voci.imageUri) {
+			const persistedUri = copyImageToAppDirectory(voci.imageUri);
+			voci.imageUri = persistedUri;
+		}
+
 		setVociList([...vociList, voci]);
 	}
 
 	function updateVoci(term: string, updatedVoci: Voci) {
+		const oldVoci = vociList.find((v) => v.term === term);
+		if (oldVoci && oldVoci.imageUri) { // there is already an image present
+			deleteImageFromAppDirectory(oldVoci.imageUri);
+		}
+		
 		setVociList(
 			vociList.map((v) => {
 				if (v.term === term) {
@@ -33,6 +44,11 @@ export function VociProvider({ children }: { children: ReactNode }) {
 	}
 
 	function removeVoci(term: String) {
+		const voci = vociList.find((v) => v.term === term);
+		if (voci && voci.imageUri) {
+			deleteImageFromAppDirectory(voci.imageUri);
+		}
+
 		setVociList(
 			vociList.filter((v) => v.term !== term)
 		);

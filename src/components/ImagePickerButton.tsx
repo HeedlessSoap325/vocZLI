@@ -1,5 +1,6 @@
 import { Alert, AlertButton, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+import { copyImageToAppDirectory, deleteImageFromAppDirectory } from "../utils/image";
 
 interface ImagePickerButtonProps {
 	imageUri?: string;
@@ -47,7 +48,7 @@ export default function ImagePickerButton(props: ImagePickerButtonProps) {
 		});
 	  
 		if (!result.canceled) {
-			props.onImageSelected(result.assets[0].uri);
+			handleImageSelected(result.assets[0].uri);
 		}
 	}
 
@@ -59,8 +60,12 @@ export default function ImagePickerButton(props: ImagePickerButtonProps) {
 		});
 	  
 		if (!result.canceled) {
-			props.onImageSelected(result.assets[0].uri);
+			handleImageSelected(result.assets[0].uri);
 		}
+	}
+
+	function handleImageSelected(chachedUri: string) {
+		props.onImageSelected(chachedUri);
 	}
 
 	return (
