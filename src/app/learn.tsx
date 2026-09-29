@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { useVoci } from "../context/VociContext";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from 'expo-speech';
-import { ActivityAction, startActivityAsync } from "expo-intent-launcher";
+import * as Haptics from 'expo-haptics';
 
 export default function LearnScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -123,7 +123,9 @@ export default function LearnScreen() {
 			<View style={styles.rightWrongView}>
 				<Pressable style={styles.wrongButton} onPress={async () => {
 					setIncorrectCount(incorrectCount + 1); 
-					await startActivityAsync(ActivityAction.TEXT_READING_SETTINGS);
+					Haptics.notificationAsync(
+						Haptics.NotificationFeedbackType.Error
+					)
 					handleSwitchCard(); 
 				}}>
 					<Text style={styles.wrongText}>Falsch</Text>
@@ -131,6 +133,9 @@ export default function LearnScreen() {
 
 				<Pressable style={styles.rightButton} onPress={() => { 
 					setCorrectCount(correctCount + 1); 
+					Haptics.notificationAsync(
+						Haptics.NotificationFeedbackType.Success
+					)
 					handleSwitchCard(); 
 				}}>
 					<Text style={styles.rightText}>Richtig</Text>
