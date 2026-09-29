@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useVoci } from "../context/VociContext";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from 'expo-speech';
+import { ActivityAction, startActivityAsync } from "expo-intent-launcher";
 
 export default function LearnScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -120,8 +121,9 @@ export default function LearnScreen() {
 			</Animated.View>
 
 			<View style={styles.rightWrongView}>
-				<Pressable style={styles.wrongButton} onPress={() => {
+				<Pressable style={styles.wrongButton} onPress={async () => {
 					setIncorrectCount(incorrectCount + 1); 
+					await startActivityAsync(ActivityAction.TEXT_READING_SETTINGS);
 					handleSwitchCard(); 
 				}}>
 					<Text style={styles.wrongText}>Falsch</Text>
