@@ -1,4 +1,4 @@
-import { Animated, Pressable, StyleSheet, Text, useAnimatedValue, View } from "react-native";
+import { Animated, Image, Pressable, StyleSheet, Text, TouchableOpacity, useAnimatedValue, View } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useVoci } from "../context/VociContext";
@@ -10,6 +10,7 @@ export default function LearnScreen() {
 	const [incorrectCount, setIncorrectCount] = useState<number>(0);
 
 	const fadeAnim = useAnimatedValue(1);
+	const fadeAnimImage = useAnimatedValue(1);
 	const slideAnim = useAnimatedValue(0);
 
 	const router = useRouter();
@@ -33,15 +34,27 @@ export default function LearnScreen() {
 			duration: 200,
 			useNativeDriver: true,
 		}).start(() => {
-			handleNext();
-
-			slideAnim.setValue(300);
-
-			Animated.timing(slideAnim, {
+			Animated.timing(fadeAnimImage, {
 				toValue: 0,
-				duration: 200,
+				duration: 150,
 				useNativeDriver: true,
-			}).start();
+			}).start(() => {
+				handleNext();
+
+				slideAnim.setValue(300);
+
+				Animated.timing(slideAnim, {
+					toValue: 0,
+					duration: 200,
+					useNativeDriver: true,
+				}).start(() => {
+					Animated.timing(fadeAnimImage, {
+						toValue: 1,
+						duration: 150,
+						useNativeDriver: true,
+					}).start();
+				});
+			})
 		});
 	}
 
@@ -76,10 +89,12 @@ export default function LearnScreen() {
 					],
 				}
 			]}>
-				<Text style={styles.vociText}>
-					{!showTranslation && currentVoci.term}
-					{showTranslation && currentVoci.translation}
-				</Text>
+				<TouchableOpacity style={styles.vociPressable} onPress={handleShowOtherSide}>
+					<Text style={styles.vociText}>
+						{!showTranslation && currentVoci.term}
+						{showTranslation && currentVoci.translation}
+					</Text>
+				</TouchableOpacity>
 			</Animated.View>
 
 			<View style={styles.rightWrongView}>
@@ -98,18 +113,14 @@ export default function LearnScreen() {
 				</Pressable>				
 			</View>
 
-			<View style={styles.buttonsView}>
-				<Pressable style={styles.showTranslationButton} onPress={handleShowOtherSide}>
-					<Text style={styles.showTranslationText}>
-						{!showTranslation && "Übersetzung zeigen"}
-						{showTranslation && "Original zeigen"}
-						</Text>
-				</Pressable>
-
-				<Pressable style={styles.nextButton} onPress={handleSwitchCard}>
-					<Text style={styles.nextText}>Weiter</Text>
-				</Pressable>
-			</View>
+			{currentVoci.imageUri &&
+				<Animated.Image source={{ uri: currentVoci.imageUri }} style={[
+					styles.image,
+					{
+						opacity: fadeAnimImage,
+					}
+				]} />
+			}
 		</View>
 	)
 }
@@ -134,6 +145,16 @@ const styles = StyleSheet.create({
 		elevation: 5,
 	},
 
+	vociPressable: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		minWidth: 300,
+		maxWidth: 300,
+		minHeight: 200,
+		maxHeight: 200,
+	},
+
 	vociText: {
 		fontSize: 30,
 		fontWeight: "600",
@@ -153,36 +174,6 @@ const styles = StyleSheet.create({
 		right: 20,
 		fontSize: 20,
 		fontWeight: "500",
-	},
-
-	buttonsView: {
-		marginTop: "10%",
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		minWidth: 300,
-		maxWidth: 300,
-	},
-
-	showTranslationButton: {
-		padding: 20,
-		borderRadius: 16,
-		backgroundColor: "#ed7703",
-	},
-
-	showTranslationText: {
-		fontWeight: "600",
-	},
-
-	nextButton: {
-		padding: 20,
-		borderRadius: 16,
-		backgroundColor: "#005380",
-	},
-
-	nextText: {
-		fontWeight: "600",
-		color: "white"
 	},
 
 	rightWrongView: {
@@ -214,4 +205,13 @@ const styles = StyleSheet.create({
 	wrongText: {
 		fontWeight: "600"
 	},
+
+	image: {
+		marginTop: 40,
+		minWidth: 200,
+		maxWidth: 200,
+		minHeight: 200,
+		maxHeight: 200,
+		resizeMode: "cover",
+	}
 })
