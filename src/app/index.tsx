@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList, Pressable, ActivityIndicator, Platform } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, ActivityIndicator, Platform, Alert } from 'react-native';
 import VociItem from '../components/VociItem';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import { useVoci } from '../context/VociContext';
+import * as StoreReview from 'expo-store-review';
+import { useEffect } from 'react';
 
 export default function Home() {
 	const router = useRouter();
@@ -12,6 +14,10 @@ export default function Home() {
 
 	const { vociList, loaded } = useVoci();
 
+	useEffect(() => {
+		StoreReview.requestReview();
+	}, []);
+  
 	return (
 		<View style={styles.container}>
 
