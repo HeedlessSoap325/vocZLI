@@ -1,5 +1,6 @@
 import { Alert, Pressable, Text, View, StyleSheet } from "react-native";
 import { onAuthenticate } from "../utils/authService";
+import { useEffect } from "react";
 
 export default function Login({setIsLoggedIn, isLoggedIn}: {setIsLoggedIn: (loggedin: boolean) => void, isLoggedIn: boolean}) {
 	const handleLogin = async () => {
@@ -10,6 +11,10 @@ export default function Login({setIsLoggedIn, isLoggedIn}: {setIsLoggedIn: (logg
 			Alert.alert('Authentication Failed', result.error);
 		}
 	};
+
+	useEffect(() => {
+		handleLogin();
+	}, []);
   
 	if (!isLoggedIn) return (
 		<View style={styles.container}>
