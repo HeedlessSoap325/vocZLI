@@ -22,7 +22,12 @@ export default function Home() {
 					data={vociList} 
 					renderItem={({item}) => <VociItem voci={item}/>} 
 					keyExtractor={(_, index) => `voci-${index}`} 
-					style={styles.flatList}
+					style={[
+						styles.flatList,
+						{
+							marginBottom: insets.bottom,
+						}
+					]}
 					contentContainerStyle={styles.flatListContainer}
 					ListEmptyComponent={
 						<Text>Keine Vocis vorhanden ;-)</Text>
@@ -32,9 +37,22 @@ export default function Home() {
 
 			<Pressable 
 				style={({pressed}) => [
-					styles.fab,
+					styles.fabDebug,
 					{
-						bottom: styles.fab.bottom + insets.bottom,
+						bottom: insets.bottom + styles.fabLearn.bottom + styles.fabLearn.height + styles.fabDebug.bottom,
+						transform: pressed ? "scale(0.95)" : "scale(1)",
+						opacity: pressed ? 0.5 : 1,
+					}
+				]}
+				onPress={() => router.push("/sensorDebug")}>
+				<Ionicons name="bug" size={24} color="#fff"/>
+			</Pressable>
+
+			<Pressable 
+				style={({pressed}) => [
+					styles.fabLearn,
+					{
+						bottom: styles.fabLearn.bottom + insets.bottom,
 						transform: pressed ? "scale(0.95)" : "scale(1)",
 						opacity: pressed ? 0.5 : 1,
 					}
@@ -49,40 +67,57 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-	flex: 1,
-	backgroundColor: '#fff',
-	alignItems: 'center',
-	paddingTop: "5%",
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		paddingTop: "5%",
+		paddingBottom: "5%",
+	},
 
-  title: {
-	fontSize: 40,
-	fontWeight: "600",
-  },
+	title: {
+		fontSize: 40,
+		fontWeight: "600",
+	},
 
-  flatList: {
-	flexGrow: 0,
-	width: "100%",
-  },
+	flatList: {
+		flexGrow: 0,
+		width: "100%",
+	},
 
-  flatListContainer: {
-	alignItems: "center",
-  },
+	flatListContainer: {
+		alignItems: "center",
+	},
 
-  fab: {
-	position: "absolute",
-	right: 20,
-	bottom: 20,
-	width: 60,
-	height: 60,
-	backgroundColor: "#ed7703",
-	flex: 1,
-	alignItems: "center",
-	justifyContent: "center",
-	borderRadius: "50%",
-	elevation: 5,
-	shadowOpacity: 5,
-	shadowRadius: 30,
-  }
+	fabLearn: {
+		position: "absolute",
+		right: 20,
+		bottom: 20,
+		width: 60,
+		height: 60,
+		backgroundColor: "#ed7703",
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "50%",
+		elevation: 5,
+		shadowOpacity: 5,
+		shadowRadius: 30,
+	},
+
+	fabDebug: {
+		position: "absolute",
+		right: 20,
+		bottom: 20,
+		width: 60,
+		height: 60,
+		backgroundColor: "#ed7703",
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "50%",
+		elevation: 5,
+		shadowOpacity: 5,
+		shadowRadius: 30,
+	}
 });
