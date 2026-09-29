@@ -2,6 +2,8 @@ import { useState } from "react";
 import Voci from "../models/voci";
 import { Alert, AlertButton, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import ImagePickerButton from "./ImagePickerButton";
+import DropDownPicker from "react-native-dropdown-picker";
+import { languages } from "../models/language";
 
 interface VociDetailProps {
 	onSave?: (voci: Voci) => void;
@@ -14,21 +16,31 @@ export default function VociDetail(props: VociDetailProps) {
 	const [term, setTerm] = useState<string>( props.voci ? props.voci.term : "");
 	const [translation, setTranslation] = useState<string>(props.voci ? props.voci.translation : "");
 	const [imageUri, setImageUri] = useState<string | undefined>(props.voci?.imageUri);
+	const [termLanguageopen, setTermLanguageOpen] = useState<boolean>(false);
+	const [translationLanguageopen, setTranslationLanguageOpen] = useState<boolean>(false);
+	const [termLanguage, setTermlanguage] = useState<string | null>(props.voci ? props.voci.termLanguage : null);
+	const [translationLanguage, setTranslationlanguage] = useState<string | null>(props.voci ? props.voci.translationLanguage : null);
+
+	const langs = languages.map((l) => {return {label: l.name, value: l.code}});
 
 	function onSubmit() {
-		if (term.trim() === "" || translation.trim() === "") {
+		if (term.trim() === "" || translation.trim() === "" || !termLanguage || !translationLanguage) {
 			Alert.alert("Fehler", "Bitte fülle alle Felder aus");
 		} else {
 			const voci: Voci = {
 				term: term,
 				translation: translation,
 				imageUri: imageUri,
+				termLanguage: termLanguage,
+				translationLanguage: translationLanguage
 			};
 
 			props.onSave!(voci);
 
 			setTerm("");
 			setTranslation("");
+			setTermlanguage(null);
+			setTranslationlanguage(null);
 		}		
 	};
 
@@ -64,6 +76,15 @@ export default function VociDetail(props: VociDetailProps) {
 					value={term}
 					placeholder="z.B. Apfel"
 				/>
+				<DropDownPicker
+					open={termLanguageopen}
+					value={termLanguage}
+					items={langs}
+					setOpen={setTermLanguageOpen}
+					setValue={setTermlanguage}
+					placeholder="Select a language"
+					listMode="SCROLLVIEW"
+				/>
 
 				<Text style={styles.inputTitle}>Übersetzung</Text>
 				<TextInput
@@ -71,6 +92,15 @@ export default function VociDetail(props: VociDetailProps) {
 					onChangeText={(e) => setTranslation(e)}
 					value={translation}
 					placeholder="z.B. Apple"
+				/>
+				<DropDownPicker
+					open={translationLanguageopen}
+					value={translationLanguage}
+					items={langs}
+					setOpen={setTranslationLanguageOpen}
+					setValue={setTranslationlanguage}
+					placeholder="Select a language"
+					listMode="SCROLLVIEW"
 				/>
 
 				{ props.onSave &&

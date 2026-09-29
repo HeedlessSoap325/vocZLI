@@ -2,6 +2,8 @@ import { Animated, Image, Pressable, StyleSheet, Text, TouchableOpacity, useAnim
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useVoci } from "../context/VociContext";
+import { Ionicons } from "@expo/vector-icons";
+import * as Speech from 'expo-speech';
 
 export default function LearnScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -58,6 +60,13 @@ export default function LearnScreen() {
 		});
 	}
 
+	function speek() {
+		const thingToSay = showTranslation ? currentVoci.translation : currentVoci.term;
+		Speech.speak(thingToSay, {
+			language: showTranslation ? currentVoci.translationLanguage : currentVoci.termLanguage,
+		});
+	}
+
 	const handleShowOtherSide = () => {
 		Animated.timing(fadeAnim, {
 			toValue: 0,
@@ -95,6 +104,19 @@ export default function LearnScreen() {
 						{showTranslation && currentVoci.translation}
 					</Text>
 				</TouchableOpacity>
+
+				<Pressable 
+					style={({pressed}) => [
+						styles.fabSpeak,
+						{
+							transform: pressed ? "scale(0.95)" : "scale(1)",
+							opacity: pressed ? 0.5 : 1,
+						}
+					]}
+					onPress={speek}
+				>
+					<Ionicons name="play" size={24} color="#fff"/>
+				</Pressable>
 			</Animated.View>
 
 			<View style={styles.rightWrongView}>
@@ -213,5 +235,21 @@ const styles = StyleSheet.create({
 		minHeight: 200,
 		maxHeight: 200,
 		resizeMode: "cover",
-	}
+	},
+
+	fabSpeak: {
+		position: "absolute",
+		right: 10,
+		top: 10,
+		width: 45,
+		height: 45,
+		backgroundColor: "#ed7703",
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "50%",
+		elevation: 5,
+		shadowOpacity: 5,
+		shadowRadius: 30,
+	},
 })

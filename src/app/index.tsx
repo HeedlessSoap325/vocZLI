@@ -60,7 +60,7 @@ export default function Home() {
 					}
 				]}
 				onPress={() => router.push("/learn")}>
-				<Ionicons name="play" size={24} color="#fff"/>
+				<Ionicons name="book" size={24} color="#fff"/>
 			</Pressable>
 
 			<StatusBar style="auto" />
