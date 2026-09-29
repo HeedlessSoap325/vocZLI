@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Voci from "../models/voci";
 import { Alert, AlertButton, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import ImagePickerButton from "./ImagePickerButton";
 
 interface VociDetailProps {
 	onSave?: (voci: Voci) => void;
@@ -12,6 +13,7 @@ interface VociDetailProps {
 export default function VociDetail(props: VociDetailProps) {
 	const [term, setTerm] = useState<string>( props.voci ? props.voci.term : "");
 	const [translation, setTranslation] = useState<string>(props.voci ? props.voci.translation : "");
+	const [imageUri, setImageUri] = useState<string | undefined>(props.voci?.imageUri);
 
 	function onSubmit() {
 		if (term.trim() === "" || translation.trim() === "") {
@@ -20,6 +22,7 @@ export default function VociDetail(props: VociDetailProps) {
 			const voci: Voci = {
 				term: term,
 				translation: translation,
+				imageUri: imageUri,
 			};
 
 			props.onSave!(voci);
@@ -51,7 +54,9 @@ export default function VociDetail(props: VociDetailProps) {
 
 	return (
 		<View style={styles.container}>
-			<View>
+			<ImagePickerButton imageUri={imageUri} onImageSelected={setImageUri} />
+
+			<View style={styles.detailView}>
 				<Text style={styles.inputTitle}>Begriff</Text>
 				<TextInput
 					style={styles.input}
@@ -96,6 +101,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingTop: 40,
 
+	},
+
+	detailView: {
+		marginTop: 20,
 	},
 
 	inputTitle: {
