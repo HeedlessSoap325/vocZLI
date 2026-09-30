@@ -6,21 +6,73 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import { useVoci } from '../context/VociContext';
 import * as StoreReview from 'expo-store-review';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import * as Device from 'expo-device';
 
 export default function Home() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
+
+	const [userName, setUserName] = useState<string | null>(null);
 
 	const { vociList, loaded } = useVoci();
 
 	useEffect(() => {
 		StoreReview.requestReview();
 	}, []);
+
+	useEffect(() => {
+		setUserName(extractUserName(Device.deviceName ?? ""));
+	}, [])
+
+	function extractUserName(deviceName: string): string | null {
+		const device = deviceName.trim();
+	  
+		// Common name particles in European languages.
+		const particles =
+		  "(?:de|del|della|di|da|du|des|van|von|der|den|ten|ter|la|le)";
+	  
+		const namePattern = String.raw`[A-ZÀ-ÖØ-Ý][\p{L}'’.-]*(?:\s+(?:${particles})\s+[A-ZÀ-ÖØ-Ý][\p{L}'’.-]*)*(?:\s+[A-ZÀ-ÖØ-Ý][\p{L}'’.-]*)?`;
+	  
+		const patterns = [
+		  // "John von Neumann's iPhone"
+		  new RegExp(`^(${namePattern})['’]s\\s+(?:iPhone|iPad|Mac|Pixel|Galaxy|Android|Phone|Fairphone|FP6)\\b`, "iu"),
+	  
+		  // "iPhone - John von Neumann"
+		  new RegExp(
+			`^(?:iPhone|iPad|Mac|Pixel|Galaxy|Android|Phone|Fairphone|FP6)\\s*[-–—]\\s*(${namePattern})$`,
+			"iu"
+		  ),
+	  
+		  // "John von Neumann - iPhone"
+		  new RegExp(
+			`^(${namePattern})\\s*[-–—]\\s*(?:iPhone|iPad|Mac|Pixel|Galaxy|Android|Phone|Fairphone|FP6)\\b`,
+			"iu"
+		  ),
+		];
+	  
+		for (const pattern of patterns) {
+		  const match = device.match(pattern);
+	  
+		  if (match?.[1]) {
+			const name = match[1].trim();
+	  
+			// Avoid treating very long strings as names.
+			if (name.length <= 80 && name.split(/\s+/).length <= 5) {
+			  return name;
+			}
+		  }
+		}
+	  
+		return null;
+	}  
   
 	return (
 		<View style={styles.container}>
-
+			{userName && 
+				<Text style={styles.welcome}>Wilkommen {userName}</Text>
+			}
+			
 			{!loaded && <ActivityIndicator size="large" />}
 
 			{ loaded && 
@@ -83,9 +135,10 @@ const styles = StyleSheet.create({
 		paddingBottom: "5%",
 	},
 
-	title: {
-		fontSize: 40,
+	welcome: {
+		fontSize: 20,
 		fontWeight: "600",
+		marginBottom: 20,
 	},
 
 	flatList: {
